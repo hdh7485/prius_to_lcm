@@ -8,8 +8,10 @@ project(prius_to_lcm)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  lcm_to_ros
+#  lcm_to_ros
+  roscpp
   prius_msgs
+  nav_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -67,10 +69,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   prius_msgs
-# )
+#generate_messages(
+#  DEPENDENCIES
+#  prius_msgs
+#  nav_msgs
+#)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -103,9 +106,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES prius_to_lcm
-#  CATKIN_DEPENDS lcm_to_ros prius_msgs
-#  DEPENDS system_lib
+  LIBRARIES prius_to_lcm
+  CATKIN_DEPENDS roscpp lcm_to_ros prius_msgs
+  DEPENDS system_lib
 )
 
 ###########
@@ -132,22 +135,9 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/prius_to_lcm_node.cpp)
-
-## Rename C++ executable without prefix
-## The above recommended prefix causes long target names, the following renames the
-## target back to the shorter version for ease of user use
-## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
-# set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
-
-## Add cmake target dependencies of the executable
-## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
+add_executable(${PROJECT_NAME}_node src/prius_to_lcm_node.cpp)
+#add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES})
 
 #############
 ## Install ##
