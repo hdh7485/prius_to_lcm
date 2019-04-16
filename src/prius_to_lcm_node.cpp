@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include <tf/tf.h>
 //#include <prius_msgs/
 #include <nav_msgs/Odometry.h>
 #include <cmath>
@@ -22,9 +23,14 @@ public:
   void navMsgCallback(const nav_msgs::Odometry::ConstPtr& msg) {
     x_ = msg->pose.pose.position.x;
     y_ = msg->pose.pose.position.y;
-    yaw_ = msg->twist.twist.angular.z;
+
+    tf::Pose pose;
+    tf::poseMsgToTF(msg->pose.pose, pose);
+    yaw_ = tf::getYaw(pose.getRotation());
+
     velocity_ = std::sqrt(std::pow(msg->twist.twist.linear.x, 2) + std::pow(msg->twist.twist.linear.y, 2));
     yaw_rate_ = msg->twist.twist.angular.z;
+
     ROS_INFO_STREAM("x:" << x_ << " y:" << y_ << " yaw:" << yaw_ << " vel:" << velocity_ << " yaw_rate:" << yaw_rate_);
   }
   

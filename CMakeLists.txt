@@ -9,6 +9,7 @@ project(prius_to_lcm)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
 #  lcm_to_ros
+  tf
   roscpp
   prius_msgs
   nav_msgs
@@ -107,7 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
   LIBRARIES prius_to_lcm
-  CATKIN_DEPENDS roscpp lcm_to_ros prius_msgs
+  CATKIN_DEPENDS roscpp lcm_to_ros prius_msgs tf
   DEPENDS system_lib
 )
 
