@@ -1,0 +1,17 @@
+package eurecar;
+
+
+/*
+using driveworks, object detection lcm definition
+*/
+
+struct dw_object_detection
+{
+	int64_t timestamp;
+	int32_t num_of_objects;
+	int32_t type[num_of_objects];
+	int32_t lefttop_x[num_of_objects];
+	int32_t lefttop_y[num_of_objects];
+	int32_t obj_width[num_of_objects];
+	int32_t obj_height[num_of_objects];
+}

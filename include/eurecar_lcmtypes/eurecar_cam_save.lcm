@@ -1,0 +1,12 @@
+package eurecar;
+
+/**
+ * Eurecar  Image Save format
+ */
+
+struct cam_save
+{
+	int64_t timestamp;
+	int32_t img_size;
+	byte img[img_size];
+}

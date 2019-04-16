@@ -1,0 +1,19 @@
+package eurecar;
+
+
+/*
+using driveworks, lane detection lcm definition
+*/
+
+struct dw_lane_detection
+{
+	int64_t timestamp;
+	int32_t num_of_lanes;
+	string lane_pos[num_of_lanes];
+	int32_t max_y[num_of_lanes];
+	int32_t min_y[num_of_lanes];
+	int32_t coef_3[num_of_lanes];
+	int32_t coef_2[num_of_lanes];
+	int32_t coef_1[num_of_lanes];
+	int32_t coef_0[num_of_lanes];
+}

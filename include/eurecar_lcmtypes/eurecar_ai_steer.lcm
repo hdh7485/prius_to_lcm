@@ -1,0 +1,13 @@
+package eurecar;
+
+/**
+ * Eurecar error count 
+ */
+
+struct Ai_steer
+{
+    int64_t utime;
+    int32_t steering_angle;
+    int32_t tmp1;
+    int32_t tmp2;
+}
