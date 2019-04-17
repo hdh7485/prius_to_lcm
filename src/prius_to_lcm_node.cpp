@@ -9,6 +9,7 @@
 
 #include "eurecar_lcmtypes/eurecar/can_t.hpp"
 #include "eurecar_lcmtypes/eurecar/pos_t.hpp"
+#include "eurecar_lcmtypes/eurecar/gga_t.hpp"
 
 
 class PriusToLCM {
@@ -26,6 +27,7 @@ private:
 
   eurecar::can_t lcm_can_t_;
   eurecar::pos_t lcm_pos_t_;
+  eurecar::gga_t lcm_gga_t_;
 
   double steering_angle_;
   double max_ackermann_a_;
@@ -36,6 +38,14 @@ public:
   lcm::LCM lcm;
 
   PriusToLCM():nh_("~") {
+    // init var
+    steering_angle_ = 0;
+    x_ = 0;
+    y_ = 0;
+    yaw_ = 0;
+    velocity_ = 0;
+    yaw_rate_ = 0;
+
     sub_ground_truth_ = nh.subscribe<nav_msgs::Odometry>("/base_pose_ground_truth", 100, &PriusToLCM::navMsgCallback, this);
     sub_prius_ = nh.subscribe<prius_msgs::Control>("/prius", 100, &PriusToLCM::priusMsgCallback, this);
     nh_.param("max_ackermann_a", max_ackermann_a_, 43.365);
@@ -54,14 +64,14 @@ public:
     velocity_ = std::sqrt(std::pow(msg->twist.twist.linear.x, 2) + std::pow(msg->twist.twist.linear.y, 2));
     yaw_rate_ = msg->twist.twist.angular.z;
 
-    ROS_INFO_STREAM("x:" << x_ << " y:" << y_ << " yaw:" << yaw_ << " vel:" << velocity_ << " yaw_rate:" << yaw_rate_);
+    //ROS_INFO_STREAM("x:" << x_ << " y:" << y_ << " yaw:" << yaw_ << " vel:" << velocity_ << " yaw_rate:" << yaw_rate_);
 
     // CAN data assign
     lcm_can_t_.utime = ros::Time::now().toSec();
     lcm_can_t_.time = ros::Time::now().toSec();
     lcm_can_t_.yaw_rate = yaw_rate_;
     lcm_can_t_.mdps_torque = 0;
-    lcm_can_t_.mdps_str_ang = -5555; // should be parsed 
+    lcm_can_t_.mdps_str_ang = steering_angle_;
     lcm_can_t_.VS_CAN = velocity_;
     lcm_can_t_.lat_accel = 0;
     lcm_can_t_.mcp = 0;
@@ -76,7 +86,7 @@ public:
 
     lcm.publish("CAN_T",&lcm_can_t_);
 
-    // POS data assign
+    // POS,GGA data assign
     lcm_pos_t_.utime = ros::Time::now().toSec();
     lcm_pos_t_.dt = 0.01;
     lcm_pos_t_.x = x_;
@@ -85,14 +95,25 @@ public:
     lcm_pos_t_.h = 0;
     lcm_pos_t_.yaw_rate = yaw_rate_;
 
+    lcm_gga_t_.utime = ros::Time::now().toSec();
+    lcm_gga_t_.x = x_;
+    lcm_gga_t_.y = y_;
+    lcm_gga_t_.h = 0;
+    lcm_gga_t_.numSV = 0;
+    lcm_gga_t_.postype = 0;
+    lcm_gga_t_.lag = 0;
+    lcm_gga_t_.hordev = 0;
+    lcm_gga_t_.lat = 0;
+    lcm_gga_t_.lon = 0;
+    lcm_gga_t_.hgt = 0;
+    lcm_gga_t_.map_idx = 0;
+
     lcm.publish("POS_T",&lcm_pos_t_);
-    ROS_INFO_STREAM("x:" << x_ << " y:" << y_ << " yaw:" << yaw_ << " vel:" << velocity_ << " yaw_rate:" << yaw_rate_ << "steering_angle:" << steering_angle_);
+    lcm.publish("GGA_T",&lcm_gga_t_);
   }
 
   void priusMsgCallback(const prius_msgs::Control::ConstPtr& msg) {
     steering_angle_ = msg->steer * i30_steer_ratio_ * (max_ackermann_a_ + max_ackermann_b_)/2;
-
-    //ROS_INFO_STREAM("steering_angle:" << steering_angle_);
   }
   
 };
