@@ -69,10 +69,10 @@ public:
     // CAN data assign
     lcm_can_t_.utime = ros::Time::now().toSec();
     lcm_can_t_.time = ros::Time::now().toSec();
-    lcm_can_t_.yaw_rate = yaw_rate_;
+    lcm_can_t_.yaw_rate = -1 * yaw_rate_;
     lcm_can_t_.mdps_torque = 0;
     lcm_can_t_.mdps_str_ang = steering_angle_;
-    lcm_can_t_.VS_CAN = velocity_;
+    lcm_can_t_.VS_CAN = velocity_ * 3.6;
     lcm_can_t_.lat_accel = 0;
     lcm_can_t_.mcp = 0;
     lcm_can_t_.accel_pedal_value = 0;
@@ -84,20 +84,24 @@ public:
     lcm_can_t_.WHL_SPD_FR = 0;
     lcm_can_t_.WHL_SPD_FL = 0;
 
+    std::cout << "vel m/s : " << velocity_ << std::endl;
+    std::cout << "vel km/h : " << velocity_*3.6 << std::endl;
+    std::cout << "yaw : " << yaw_ << std::endl;
+
     lcm.publish("CAN_T",&lcm_can_t_);
 
     // POS,GGA data assign
     lcm_pos_t_.utime = ros::Time::now().toSec();
     lcm_pos_t_.dt = 0.01;
     lcm_pos_t_.x = x_;
-    lcm_pos_t_.y = y_;
+    lcm_pos_t_.y = -y_;
     lcm_pos_t_.v = 0;
-    lcm_pos_t_.h = 0;
-    lcm_pos_t_.yaw_rate = yaw_rate_;
+    lcm_pos_t_.h = -1 * yaw_;
+    lcm_pos_t_.yaw_rate = -1 * yaw_rate_;
 
     lcm_gga_t_.utime = ros::Time::now().toSec();
     lcm_gga_t_.x = x_;
-    lcm_gga_t_.y = y_;
+    lcm_gga_t_.y = -y_;
     lcm_gga_t_.h = 0;
     lcm_gga_t_.numSV = 0;
     lcm_gga_t_.postype = 0;
