@@ -28,7 +28,7 @@ private:
 
 public:
   lcm::LCM lcm;
-public:
+
   PriusToLCM():nh_("~") {
     sub_ = nh.subscribe<nav_msgs::Odometry>("/base_pose_ground_truth", 100, &PriusToLCM::navMsgCallback, this);
   }
