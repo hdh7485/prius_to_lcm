@@ -109,7 +109,7 @@ public:
     lcm_gga_t_.map_idx = 0;
 
     lcm.publish("POS_T",&lcm_pos_t_);
-    lcm.publish("GGA_T",&lcm_gga_t_);
+    lcm.publish("GGA_1",&lcm_gga_t_);
   }
 
   void priusMsgCallback(const prius_msgs::Control::ConstPtr& msg) {
